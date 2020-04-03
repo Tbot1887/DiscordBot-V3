@@ -11,5 +11,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Thomas Ruigrok",
-  "license": "ISC"
+  "license": "MPL-2.0"
 }
