@@ -32,6 +32,7 @@ const fs = require('fs');
 
 //Declare other const variables
 const KEY_FILE_NAME = "DiscordLoginToken.key";
+const LOG_FILE_PATH = "logs/CmdLog.log"
 
 // Declare Bot const variables
 const BOT_VERSION = '1.6';
@@ -114,15 +115,6 @@ function readKeyFromFile() {
 /////////////////////////////////////////////////////////////////
 //Cammand Functions below this line                            //
 ////////////////////////////////////////////////////////////////
-
-
-function convertToLowercase(msg) {
-    // Convert msg to lowercase
-    msg.content = msg.content.toLowerCase();
-
-    //Return the changed message
-    return msg;
-}
 
 
 function checkForCommand(msg) {
@@ -212,7 +204,10 @@ function CheckUserRole(msg) {
 
 function ResetBot(msg) {
     var channel = msg.channel;
-
+    
+    //Create log entry
+    AdminCmdLog(msg, "reset");
+    
     //Validate User role
     if (CheckUserRole(msg)) {
         // send channel a message that you're resetting bot
@@ -227,6 +222,9 @@ function ResetBot(msg) {
 
 function StopBot(msg) {
     var channel = msg.channel;
+    
+    //Create log entry
+    AdminCmdLog(msg, "shutdown");
 
     //Validate User role
     if (CheckUserRole(msg)) {
@@ -236,4 +234,51 @@ function StopBot(msg) {
     } else {
         msg.reply("You don't have permission to use that command. You must have the role of:  `" + ADMIN_ROLE_NAME + "`");
     }
+}
+
+
+/////////////////////////////////////////////////////////////////
+//Utility Functions below this line                            //
+////////////////////////////////////////////////////////////////
+
+
+function convertUTCDateToLocalDate(date) {
+    var newDate = new Date(date.getTime() - date.getTimezoneOffset()*60*1000);
+    return newDate;   
+}
+
+
+function convertToLowercase(msg) {
+    // Convert msg to lowercase
+    msg.content = msg.content.toLowerCase();
+
+    //Return the changed message
+    return msg;
+}
+
+
+function AdminCmdLog(msg, cmdRcvd){
+    //Declare vars
+    var date = new Date();
+    var time = time_pad(date.getUTCHours()) + ":" + time_pad(date.getUTCMinutes());
+    var localTime = time_pad(date.getHours()) + ":" + time_pad(date.getMinutes());
+    var user = msg.member.user.tag;
+    var fileOpen = false;
+    
+    //Command Received: 04/04/2020 @ 22:49 (UTC: 04:49) By: tbot1887#1234 -- Command Issued: reset
+    var logString = "Command Received: " + time_pad(date.getMonth()) + "/" + time_pad(date.getDay()) + "/" + date.getFullYear() + " @ " 
+        + localTime + "(UTC: " + time + ") By:" + user + " -- Command Issued: " + cmdRcvd;
+
+    //Write Logfile to file @ console
+    console.log(logString);
+    //Open Log File
+    try {
+        fs.appendFileSync(LOG_FILE_PATH, logString + '\n');
+    } catch (error) {
+        msg.channel.send("WARNING!!! Log File Creation Failed." + '\n' + error.toString());
+    }
+}
+
+function time_pad(n) {
+    return String("00" + n).slice(-2);
 }
