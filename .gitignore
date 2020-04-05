@@ -1,3 +1,4 @@
 *.key
 *.bat
 *.sh
+/logs/*.log
