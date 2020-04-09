@@ -32,10 +32,11 @@ const fs = require('fs');
 
 //Declare other const variables
 const KEY_FILE_NAME = "DiscordLoginToken.key";
-const LOG_FILE_PATH = "logs/CmdLog.log"
+const LOG_FILE_PATH = "logs/CmdLog.log";
+const ERROR_FILE_PATH = "logs/Errors.log";
 
 // Declare Bot const variables
-const BOT_VERSION = '1.6';
+const BOT_VERSION = '1.6.5';
 const ADMIN_ROLE_NAME = "BotAdmin";
 const CMD_PREFIX = '!!';
 const AdminCmdPrefix = '*!';
@@ -85,7 +86,7 @@ function init() {
         //Login to client
         client.login(DISCORD_LOGIN_TOKEN);
     } else {
-
+        error_log("Can't load discord key token. Aborting...", -100, exitScript);
     }
 }
 
@@ -132,7 +133,7 @@ function checkForCommand(msg) {
         StopBot(msg);
     } else if (msg.content === CMD_PREFIX + 'help') {
         Help(msg);
-    } else if (msg.content === 'bubblegum') {
+    } else if (wildcard(msg.content, '*bubblegum*')) {
         BubbleGum(msg);
     };
 }
@@ -229,8 +230,11 @@ function StopBot(msg) {
     //Validate User role
     if (CheckUserRole(msg)) {
         // send channel a message that you're stopping bot
+        
         channel.send('Bot Shutting Down...')
-            .then(msg => client.destroy());
+            .then(msg => client.destroy())
+            .then(() => process.exit(0));
+        
     } else {
         msg.reply("You don't have permission to use that command. You must have the role of:  `" + ADMIN_ROLE_NAME + "`");
     }
@@ -240,6 +244,12 @@ function StopBot(msg) {
 /////////////////////////////////////////////////////////////////
 //Utility Functions below this line                            //
 ////////////////////////////////////////////////////////////////
+
+//Wildcard Regex Test
+function wildcard(message, rule) {
+    var escapeRegex = (message) => message.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+    return new RegExp("^" + rule.split("*").map(escapeRegex).join(".*") + "$").test(message);
+}
 
 
 function convertUTCDateToLocalDate(date) {
@@ -263,11 +273,10 @@ function AdminCmdLog(msg, cmdRcvd){
     var time = time_pad(date.getUTCHours()) + ":" + time_pad(date.getUTCMinutes());
     var localTime = time_pad(date.getHours()) + ":" + time_pad(date.getMinutes());
     var user = msg.member.user.tag;
-    var fileOpen = false;
     
     //Command Received: 04/04/2020 @ 22:49 (UTC: 04:49) By: tbot1887#1234 -- Command Issued: reset
-    var logString = "Command Received: " + time_pad(date.getMonth()) + "/" + time_pad(date.getDay()) + "/" + date.getFullYear() + " @ " 
-        + localTime + "(UTC: " + time + ") By:" + user + " -- Command Issued: " + cmdRcvd;
+    var logString = "Command Received: " + time_pad((date.getMonth()+1)) + "/" + time_pad(date.getDate()) + "/" + date.getFullYear() + " @ " 
+        + localTime + "(UTC: " + time + ") By: " + user + " -- Command Issued: " + cmdRcvd;
 
     //Write Logfile to file @ console
     console.log(logString);
@@ -279,6 +288,36 @@ function AdminCmdLog(msg, cmdRcvd){
     }
 }
 
+
 function time_pad(n) {
     return String("00" + n).slice(-2);
+}
+
+
+function error_log(errorMsg, errorCode, callback){
+    //Set Exit (STOP) Code
+    process.exitCode = errorCode;
+
+    //create log string
+    var logString = "STOP CODE: " + errorCode + " - Details: " + errorMsg;
+    
+    //Write Logfile to file @ console
+    console.log(logString);
+    
+    //Open Log File & Write too it
+    try {
+        fs.appendFileSync(ERROR_FILE_PATH, logString + '\n');
+    } catch (error) {
+        //If writing failed
+        console.log("WARNING!!! Log File Creation Failed." + '\n' + error.toString());
+    }
+
+    //Callback function
+    if (typeof callback == "function") 
+        callback(); 
+}
+
+
+function exitScript(){
+    process.exit();
 }

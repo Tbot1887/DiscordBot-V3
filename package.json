@@ -1,6 +1,6 @@
 {
   "name": "tbot1887_bot",
-  "version": "1.6.0",
+  "version": "1.6.5",
   "description": "My First Discord Bot",
   "main": "bot.js",
   "dependencies": {
