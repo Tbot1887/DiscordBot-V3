@@ -4,8 +4,7 @@
   "description": "My First Discord Bot",
   "main": "bot.js",
   "dependencies": {
-    "discord.js": "^11.6.3",
-    "pm2": "^4.2.3"
+    "discord.js": "^11.6.3"
   },
   "devDependencies": {},
   "scripts": {
