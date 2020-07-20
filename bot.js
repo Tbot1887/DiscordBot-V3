@@ -29,14 +29,15 @@ const client = new Discord.Client();
 
 //Declare other integration variables
 const fs = require('fs');
+const ConnectionCheck = require('internet-available');
 
 //Declare other const variables
-const KEY_FILE_NAME = "DiscordLoginToken.key";
-const LOG_FILE_PATH = "logs/CmdLog.log";
-const ERROR_FILE_PATH = "logs/Errors.log";
+const KEY_FILE_NAME = "/home/pi/DiscordBot/DiscordLoginToken.key";
+const LOG_FILE_PATH = "/home/pi/DiscordBot/logs/CmdLog.log";
+const ERROR_FILE_PATH = "/home/pi/DiscordBot/logs/Errors.log";
 
 // Declare Bot const variables
-const BOT_VERSION = '1.6.5';
+const BOT_VERSION = '1.7.5';
 const ADMIN_ROLE_NAME = "BotAdmin";
 const CMD_PREFIX = '!!';
 const AdminCmdPrefix = '*!';
@@ -82,12 +83,16 @@ client.on('message', msg => {
 
 
 function init() {
-    if (readKeyFromFile()) {
-        //Login to client
-        client.login(DISCORD_LOGIN_TOKEN);
-    } else {
-        error_log("Can't load discord key token. Aborting...", -100, exitScript);
-    }
+    ConnectionCheck().then(function(){
+        if(readKeyFromFile()){
+           //login to client
+           client.login(DISCORD_LOGIN_TOKEN);
+        } else {
+           error_log("Can't load discord key token. Aborting...", -100, exitScript);
+        }
+    }).catch(function(){
+        error_log("Internet Connection unavailable. Aborting...", -404, exitScript);
+    });
 }
 
 function readKeyFromFile() {
