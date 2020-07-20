@@ -178,7 +178,7 @@ function Marco_polo(msg) {
 
 
 function MinecraftIPs(msg) {
-    msg.reply('\n Main MC Server: mc.thesmc.ca \n Backup MC Server: mc3.thesmc.ca \n Skyblock MC Server (MC Version 1.12): mc2.thesmc.ca');
+    msg.reply('\n Main MC Server: N/A \n Backup MC Server: N/A \n Skyblock MC Server (MC Version 1.??): N/A');
 }
 
 
