@@ -1,10 +1,10 @@
 /*
-	Project Name: Tbot's Discord Bot
-	Written By: Thomas Ruigrok
+    Project Name: Tbot's Discord Bot
+    @author Thomas Ruigrok
 
-    Copyright 2019-2024 By Thomas Ruigrok.
+    @copyright Copyright 2019-2024 By Thomas Ruigrok.
 
-	This Source Code Form is subject to the terms of the Mozilla Public
+    This Source Code Form is subject to the terms of the Mozilla Public
     License, v. 2.0. If a copy of the MPL was not distributed with this
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
@@ -47,6 +47,7 @@ const AdminCmdPrefix = '*!';
 
 // Other vars
 const MC_ENABLED = false;
+const JOKE_API = "https://official-joke-api.appspot.com/jokes/random";
 
 // Declare one-time assignment variables
 var DISCORD_LOGIN_TOKEN = 'TOKEN-AUTO-INJECTED-FROM-INIT';
@@ -98,7 +99,9 @@ client.on('message', msg => {
 //INITIALIZATION functions below this line                     //
 ////////////////////////////////////////////////////////////////
 
-
+/**
+ * Initialization Function to load application variables
+ */
 function Init() {
     console.log(GetBotInfo());
     ConnectionCheck().then(function() {
@@ -124,6 +127,10 @@ function Init() {
     });
 }
 
+/**
+ * Reads the discord Login Token from file
+ * @return keyLoaded
+ */
 function ReadKeyFromFile() {
     var keyLoaded = true;
 
@@ -156,6 +163,10 @@ function Moderation(msg) {
 
 }
 
+/**
+ * Check for a valid command
+ * @param {object} msg - Discord.js Message Object
+ */
 function CheckForCommand(msg) {
     if (msg.content === CMD_PREFIX + 'ping') {
         Ping(msg);
@@ -178,6 +189,9 @@ function CheckForCommand(msg) {
     };
 }
 
+/**
+ * Check to see if numbers add up to either 69 or 420 inside the message string
+ */
 function LuckyNumbers(msg) {
 	var str = msg.content;
 
@@ -197,6 +211,11 @@ function LuckyNumbers(msg) {
 	}
 }
 
+
+/**
+ * The Help Command - Lists available commands
+ * @param {object} msg - Discord.js Message Object
+ */
 function Help(msg) {
     //Regular Commands
     response = '\n' + "Available Commands" + '\n' + "-------------------\n";
@@ -214,27 +233,48 @@ function Help(msg) {
     msg.reply(response);
 }
 
+
+/**
+ * the Version command - Lists information about the bot (IE. Current Version & Author)
+ * @param {object} msg - Discord.js Message Object
+ */
 function GetInfo(msg) {
     var channel = msg.channel;
     channel.send(GetBotInfo());
 }
 
 
+/**
+ * the Ping command - Simple test reply command (First command)
+ * @param {object} msg - Discord.js Message Object
+ */
 function Ping(msg) {
     msg.reply('pong');
 }
 
 
+/**
+ * the Cookie Command - Replies with a cookie Emoticon
+ * @param {object} msg 
+ */
 function Cookie(msg) {
     msg.reply(':cookie:');
 }
 
 
+/**
+ * the marco command - Replies to 'Marco' with 'Polo!'
+ * @param {object} msg - Discord.js Message Object
+ */
 function Marco_polo(msg) {
     msg.reply('Polo!');
 }
 
 
+/**
+ * the MCServer Command - If MC_ENABLED is true. Print the Minecraft server IP(s)
+ * @param {object} msg - Discord.js Message Object
+ */
 function MinecraftIPs(msg) {
     if (MC_ENABLED)
         msg.reply('\n Main MC Server:');
@@ -253,11 +293,43 @@ function RockPaperScissors(msg) {
     	} */
 }
 
+
+/**
+ * the Joke Command - Create a Fetch Request to the Official Joke API & Responds with a joke
+ * @param {object} msg - Discord.js Message Object
+ */
+function TellMeAJoke(msg) {
+    let channel = msg.channel;
+    let joke = null;
+
+    //Fetch Request
+    fetch(JOKE_API)
+        .then((response) => {
+            //Check the response status code
+            if(response.status !== 200)
+                throw Error(response.statusText);
+            else
+                return response.json();
+        })
+        .then((jsonResponse) => {
+            joke = jsonResponse;
+
+            channel.send(joke.setup.toString())
+            setTimeout(() => {channel.send(joke.punchline.toString())},3000)
+        }).catch((error) => {
+            channel.send("I encountered an error: Here are the details: \n" + error.message + "\n Please try again later...");
+    });
+}
+
+
+/**
+ * replies to any message containing the word 'bubblegum' with the bubblegum meme
+ * @param {object} msg - Discord.js Message Object
+ */
 function BubbleGum(msg) {
     const BUBBLEGUM_RESPONSE = "shut your bubble gum dumb dumb skin tone chicken bone google chrome no homo flip phone disowned ice cream cone garden gnome extra chromosome metronome dimmadome genome full blown monochrome student loan indiana jones over grown flint stone X and Y Chromosome friend zome sylvester stalone sierra leone auto zone friend zone professionally seen silver patrone big headed ass UP";
     msg.reply(BUBBLEGUM_RESPONSE);
 }
-
 
 function CheckUserRole(msg) {
     var returnVar = false;
@@ -270,6 +342,10 @@ function CheckUserRole(msg) {
 }
 
 
+/**
+ * Admin Command to reset (Restart) the bot
+ * @param {object} msg - Discord.js Message Object
+ */
 function ResetBot(msg) {
     var channel = msg.channel;
 
@@ -288,6 +364,10 @@ function ResetBot(msg) {
 }
 
 
+/**
+ * Admin Command to shutdown the bot
+ * @param {object} msg - Discord.js Message Object 
+ */
 function StopBot(msg) {
     var channel = msg.channel;
 
@@ -308,27 +388,98 @@ function StopBot(msg) {
 }
 
 
+/**
+ * Admin Command to mute a user
+ * Not Implemented Yet!
+ * @param {object} msg - Discord.js Message Object 
+ */
+function MuteUser(msg)
+{
+    msg.reply(NotImplemented());
+}
+
+
+/**
+ * Admin Command to kick a user
+ * Not Implemented Yet!
+ * @param {object} msg - Discord.js Message Object 
+ */
+function KickUser(msg)
+{
+    msg.reply(NotImplemented());
+}
+
+
+/**
+ * Admin Command to ban a user
+ * Not Implemented Yet!
+ * @param {object} msg - Discord.js Message Object 
+ */
+function BanUser(msg)
+{
+    msg.reply(NotImplemented());
+}
+
+
 /////////////////////////////////////////////////////////////////
 //Utility Functions below this line                            //
 ////////////////////////////////////////////////////////////////
 
-//Wildcard Regex Test
+
+/**
+ * Utility function to check if a user has a role
+ * @param {object} msg - Discord.js Message Object
+ * @returns {boolean} true/false depending on if user has role
+ */
+function CheckUserRole(msg) {
+    var returnVar = false;
+    //Validate user has sufficient permissions
+    if (msg.guild.roles.find(role => role.name === ADMIN_ROLE_NAME)) {
+        returnVar = true;
+    }
+
+    return returnVar;
+}
+
+
+/**
+ * Determines if a message contains the rule specified
+ * @param {string} message - Discord Message Contents
+ * @param {string} rule - Phrase to match (RegEx)
+ * @returns {boolean} True/False
+ */
 function Wildcard(message, rule) {
     var escapeRegex = (message) => message.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
     return new RegExp("^" + rule.split("*").map(escapeRegex).join(".*") + "$").test(message);
 }
 
+
+/**
+ * Helper Function to combine bot Info into a single string
+ * @returns {string} Bot Info String
+ */
 function GetBotInfo() {
     var returnStr = BOT_NAME + " Version " + BOT_VERSION + '\n' + "Author: " + AUTHOR;
     return returnStr;
 }
 
+
+/**
+ * Converts UTC Date to a Local Date
+ * @param {Date} date - Date to be converted
+ * @returns {Date} UTC Date in Local Date
+ */
 function ConvertUTCDateToLocalDate(date) {
     var newDate = new Date(date.getTime() - date.getTimezoneOffset() * 60 * 1000);
     return newDate;
 }
 
 
+/**
+ * Converts a Discord message to lowercase
+ * @param {object} msg - Discord.js Message Object
+ * @returns {object} Discord.js Message Object converted to lowerCase
+ */
 function ConvertToLowercase(msg) {
     // Convert msg to lowercase
     msg.content = msg.content.toLowerCase();
@@ -338,6 +489,11 @@ function ConvertToLowercase(msg) {
 }
 
 
+/**
+ * Logs an admin command to a log file & discord channel
+ * @param {object} msg - Discord.js Message Object 
+ * @param {*} cmdRcvd - The name of the command received
+ */
 function AdminCmdLog(msg, cmdRcvd) {
     //Declare vars
     var date = new Date();
@@ -360,16 +516,41 @@ function AdminCmdLog(msg, cmdRcvd) {
 }
 
 
+/**
+ * Pads a number with a leading zero
+ * @param {number} n - The number to be padded
+ * @returns {string} Number padded with leading zero if needed
+ */
 function TimePad(n) {
     return String("00" + n).slice(-2);
 }
 
-// sleep time expects milliseconds
+
+/**
+ * Creates a timeout promise
+ * @param {number} time - Time to wait in miliseconds
+ * @returns {promise}
+ */
 function sleep (time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }
 
 
+/**
+ * Returns a non implemented yet message
+ * @returns {string} Command is not implemented yet!
+ */
+function NotImplemented() {
+    return "Command is not implemented yet!"
+}
+
+
+/**
+ * Logs an error occurrence to a file & sets an exit code
+ * @param {string} errorMsg - The error message Text
+ * @param {number} errorCode - The Error Code
+ * @param {*} callback - Callback function if needed
+ */
 function Error_log(errorMsg, errorCode, callback) {
     //Set Exit (STOP) Code
     process.exitCode = errorCode;
@@ -394,6 +575,9 @@ function Error_log(errorMsg, errorCode, callback) {
 }
 
 
+/**
+ * exits the currently running script
+ */
 function exitScript() {
     process.exit();
 }
