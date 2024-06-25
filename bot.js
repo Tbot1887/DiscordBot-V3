@@ -38,7 +38,7 @@ const LOG_FILE_PATH = "/home/pi/DiscordBot/logs/CmdLog.log";
 const ERROR_FILE_PATH = "/home/pi/DiscordBot/logs/Errors.log";
 
 // Declare Bot const variables
-const BOT_VERSION = '3.1.3';
+const BOT_VERSION = '3.1.4';
 const BOT_NAME = "Squishy Overlord Bot";
 const ADMIN_ROLE_NAME = "BotAdmin";
 const AUTHOR = "Thomas Ruigrok #8086";
@@ -151,9 +151,9 @@ function ReadKeyFromFile() {
 //Command Functions below this line                            //
 ////////////////////////////////////////////////////////////////
 
-
+//TODO: Add Stuff Here
 function Moderation(msg) {
-    MusicCommands(msg);
+
 }
 
 function CheckForCommand(msg) {
@@ -197,25 +197,6 @@ function LuckyNumbers(msg) {
 	}
 }
 
-function MusicCommands(msg) {
-    const RYTHEM_CMDS = ["!play*", "!stop*", "!skip*", "!fs*"];
-    const MUSIC_CHANNEL_ID = "613622154919018496";
-    var channelTag = "<#" + MUSIC_CHANNEL_ID + ">";
-
-    var replyMsg = "Music Commands can only be used in the " + channelTag + " Channel!";
-    var channel = msg.channel;
-    var currentChannelID = channel.id;
-
-    for (i = 0; i < RYTHEM_CMDS.length; i++) {
-        if (Wildcard(msg.content, RYTHEM_CMDS[i])) {
-            if (currentChannelID != MUSIC_CHANNEL_ID) {
-                msg.reply(replyMsg);
-            }
-        }
-    }
-}
-
-
 function Help(msg) {
     //Regular Commands
     response = '\n' + "Available Commands" + '\n' + "-------------------\n";
@@ -256,12 +237,13 @@ function Marco_polo(msg) {
 
 function MinecraftIPs(msg) {
     if (MC_ENABLED)
-        msg.reply('\n Main MC Server: [REDACTED]');
+        msg.reply('\n Main MC Server:');
     else
         msg.reply('NO MC Servers Available');
 }
 
 
+//TODO: Work on function
 function RockPaperScissors(msg) {
 
     /* 	if (userChoice ==! 'rock' || userChoice ==! 'paper' || userChoice ==! 'scissors'){
