@@ -33,12 +33,12 @@ const ConnectionCheck = require('internet-available');
 const roleClaim = require('./role-claim');
 
 //Declare other const variables
-const KEY_FILE_NAME = "/home/pi/DiscordBot/DiscordLoginToken.key";
-const LOG_FILE_PATH = "/home/pi/DiscordBot/logs/CmdLog.log";
-const ERROR_FILE_PATH = "/home/pi/DiscordBot/logs/Errors.log";
+const KEY_FILE_NAME = "./DiscordLoginToken.key";
+const LOG_FILE_PATH = "./logs/CmdLog.log";
+const ERROR_FILE_PATH = "./logs/Errors.log";
 
 // Declare Bot const variables
-const BOT_VERSION = '3.1.4';
+const BOT_VERSION = '3.1.5';
 const BOT_NAME = "Squishy Overlord Bot";
 const ADMIN_ROLE_NAME = "BotAdmin";
 const AUTHOR = "Thomas Ruigrok #8086";

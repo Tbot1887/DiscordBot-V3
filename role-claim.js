@@ -2,7 +2,8 @@ const { GuildMemberRoleManager } = require('discord.js');
 const firstMessage = require('./first-message');
 
 module.exports = client => {
-    const channelID = '1039337855081787492';
+    const channelID = '[REDACTED]';
+    const ModChannel = '[REDACTED]';
 
     const emojis = {
         '✅': 'Squishy Club Member'
@@ -38,12 +39,23 @@ module.exports = client => {
 
             const member = guild.members.cache.find(member => member.id === user.id);
 
+            const ModLog = client.channels.cache.get(ModChannel);
+
+            const eventLog = "--- Event Log ---" + '\n';
+
+            var msg = `${eventLog} Role Claim error regarding member: ${member.displayName}`
+
             if(add){
+                msg = `${eventLog} Added role: "${role.name}" to user: ${member.displayName}`;
                 member.roles.add(role);
             }
             else {
+                msg = `${eventLog} Removed role: "${role.name}" from user: ${member.displayName}`;
                 member.roles.remove(role);
             }
+
+                console.log(msg);
+                ModLog.send(msg);
         }
     }
 
