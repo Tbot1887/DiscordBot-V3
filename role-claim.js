@@ -2,8 +2,8 @@ const { GuildMemberRoleManager } = require('discord.js');
 const firstMessage = require('./first-message');
 
 module.exports = client => {
-    const channelID = '[REDACTED]';
-    const ModChannel = '[REDACTED]';
+    const channelID = process.env.ANNOUNCEMENT_CHANNEL;
+    const ModChannel = process.env.MOD_LOG_CHANNEL;
 
     const emojis = {
         '✅': 'Squishy Club Member'

@@ -28,17 +28,18 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 
 //Declare other integration variables
+require('dotenv').config()
 const fs = require('fs');
 const ConnectionCheck = require('internet-available');
 const roleClaim = require('./role-claim');
 
 //Declare other const variables
-const KEY_FILE_NAME = "./DiscordLoginToken.key";
-const LOG_FILE_PATH = "./logs/CmdLog.log";
-const ERROR_FILE_PATH = "./logs/Errors.log";
+const KEY_FILE_NAME = "/home/pi/DiscordBot/DiscordLoginToken.key";
+const LOG_FILE_PATH = "/home/pi/DiscordBot/logs/CmdLog.log";
+const ERROR_FILE_PATH = "/home/pi/DiscordBot/logs/Errors.log";
 
 // Declare Bot const variables
-const BOT_VERSION = '3.1.5';
+const BOT_VERSION = '3.2.0';
 const BOT_NAME = "Squishy Overlord Bot";
 const ADMIN_ROLE_NAME = "BotAdmin";
 const AUTHOR = "Thomas Ruigrok #8086";
@@ -68,7 +69,6 @@ Init();
 // On Client Ready, Send message to console
 client.on('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-
     roleClaim(client);
 });
 
@@ -434,7 +434,7 @@ function BanUser(msg)
 function CheckUserRole(msg) {
     var returnVar = false;
     //Validate user has sufficient permissions
-    if (msg.guild.roles.find(role => role.name === ADMIN_ROLE_NAME)) {
+    if (msg.guild.roles.cache.find(role => role.name === ADMIN_ROLE_NAME)) {
         returnVar = true;
     }
 

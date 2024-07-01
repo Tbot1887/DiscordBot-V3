@@ -5,6 +5,7 @@
   "main": "bot.js",
   "dependencies": {
     "discord.js": "^12.5.3",
+    "dotenv": "^16.4.5",
     "internet-available": "^1.0.0"
   },
   "scripts": {
