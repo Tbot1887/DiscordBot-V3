@@ -39,7 +39,7 @@ const LOG_FILE_PATH = "/home/pi/DiscordBot/logs/CmdLog.log";
 const ERROR_FILE_PATH = "/home/pi/DiscordBot/logs/Errors.log";
 
 // Declare Bot const variables
-const BOT_VERSION = '3.2.0';
+const BOT_VERSION = '3.2.5';
 const BOT_NAME = "Squishy Overlord Bot";
 const ADMIN_ROLE_NAME = "BotAdmin";
 const AUTHOR = "Thomas Ruigrok #8086";
@@ -556,7 +556,8 @@ function Error_log(errorMsg, errorCode, callback) {
     process.exitCode = errorCode;
 
     //create log string
-    var logString = "STOP CODE: " + errorCode + " - Details: " + errorMsg;
+    var logString = TimePad((date.getMonth() + 1)) + "/" + TimePad(date.getDate()) + "/" + date.$        localTime + "(UTC: " + time + ")\n"
+    var logString += "STOP CODE: " + errorCode + " - Details: " + errorMsg;
 
     //Write Logfile to file @ console
     console.log(logString);
