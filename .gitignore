@@ -4,3 +4,4 @@
 *.bat
 *.sh
 /logs/*.log
+/Copies/*
