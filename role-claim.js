@@ -2,24 +2,26 @@ const { GuildMemberRoleManager } = require('discord.js');
 const firstMessage = require('./first-message');
 
 module.exports = client => {
-    const channelID = process.env.ANNOUNCEMENT_CHANNEL;
-    const ModChannel = process.env.MOD_LOG_CHANNEL;
+    const channelID = "[REDACTED]";
+    const ModChannel = "{REDACTED]";
 
     const emojis = {
-        '✅': 'Squishy Club Member'
+        '✅': 'Squishy Club Member',
+	'🎮': 'Patch Notes',
+	'📣': 'Free Games',
+	'🔧': 'Driver Updates'
     }
 
     const reactions = []
 
-    let emojiText = 'React with '
+    let emojiText = 'React with... \n\n'
     for (const key in emojis) {
         reactions.push(key)
 
         const role = emojis[key];
-        emojiText += `${key} `
+        emojiText += `${key} for the "${role}" role`
+	emojiText += '\n'
     }
-
-    emojiText += 'to pass the Captcha and reveal the whole server!'
 
     firstMessage(client, channelID, emojiText, reactions)
 
